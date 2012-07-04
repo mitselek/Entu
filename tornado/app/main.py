@@ -24,6 +24,7 @@ controllers = [
     'application',
     'test',
     'oldauth',
+    'amphora',
 ]
 
 
