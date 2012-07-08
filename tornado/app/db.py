@@ -157,6 +157,8 @@ class Entity():
         if not property_definition_id:
             return
 
+        self.created = 'NOW()'
+
         definition = self.db.get('SELECT datatype FROM property_definition WHERE id = %s LIMIT 1;', property_definition_id)
         if definition.datatype == 'text':
             field = 'value_text'
@@ -171,7 +173,9 @@ class Entity():
         elif definition.datatype == 'file':
             value = 0
             if uploaded_file:
-                value = self.db.execute_lastrowid('INSERT INTO file SET filename = %s, file = %s, created_by = %s, created = NOW();', uploaded_file['filename'], uploaded_file['body'], self.created_by)
+                if 'created' in uploaded_file:
+                    self.created = uploaded_file['created']
+                value = self.db.execute_lastrowid('INSERT INTO file SET filename = %s, file = %s, created_by = %s, created = %s, filesize = %s;', uploaded_file['filename'], uploaded_file['body'], self.created_by, self.created, len(uploaded_file['body']))
             field = 'value_file'
         elif definition.datatype == 'boolean':
             field = 'value_boolean'
@@ -191,17 +195,19 @@ class Entity():
             )
         else:
             if entity_id:
-                property_id = self.db.execute_lastrowid('INSERT INTO property SET entity_id = %%s, property_definition_id = %%s, %s = %%s, created = NOW(), created_by = %%s;' % field,
+                property_id = self.db.execute_lastrowid('INSERT INTO property SET entity_id = %%s, property_definition_id = %%s, %s = %%s, created = %%s, created_by = %%s;' % field,
                     entity_id,
                     property_definition_id,
                     value,
+                    self.created,
                     self.created_by
                 )
             if relationship_id:
-                property_id = self.db.execute_lastrowid('INSERT INTO property SET relationship_id = %%s, property_definition_id = %%s, %s = %%s, created = NOW(), created_by = %%s;' % field,
+                property_id = self.db.execute_lastrowid('INSERT INTO property SET relationship_id = %%s, property_definition_id = %%s, %s = %%s, created = %%s, created_by = %%s;' % field,
                     relationship_id,
                     property_definition_id,
                     value,
+                    self.created,
                     self.created_by
                 )
 

@@ -3,14 +3,16 @@ from tornado import database
 from tornado.options import options
 
 import xmltodict
-# import hashlib
-# import base64
-# from random import randint
-# from datetime import *
 import re
 
 import db
 from helper import *
+
+import os
+import datetime
+def modification_date(filename):
+    t = os.path.getmtime(filename)
+    return datetime.datetime.fromtimestamp(t)
 
 
 def connection():
@@ -25,6 +27,57 @@ def connection():
         password    = options.mysql_password,
     )
 
+class LoadFiles(myRequestHandler):
+    """
+
+    """
+    def get(self):
+        self.db = connection()
+        fileroot = "/Users/michelek/Downloads/KAExport/KAExport04062012/"
+
+        sql = """
+            SELECT entity_id, filename, local_file, property_definition_id
+            FROM
+            (   SELECT (SELECT id FROM entity WHERE gae_key = CONCAT('amphora_document_', md5(a.item_id)))             AS entity_id,
+                       a.file_orig_name                                                                                AS filename,
+                       (SELECT id FROM property_definition WHERE gae_key = 'amphora_document_file')                    AS property_definition_id,
+                       concat('Dokumendid/', REPLACE(a.folder_path,'\\\\','/'), '/', a.item_id, '/', a.file_orig_guid) AS local_file
+                FROM x_amphora_dokumendid a
+                UNION
+                SELECT (SELECT id FROM entity WHERE gae_key = CONCAT('amphora_message_', md5(a.item_id)))              AS entity_id,
+                       a.file_orig_name                                                                                AS filename,
+                       (SELECT id FROM property_definition WHERE gae_key = 'amphora_document_file')                    AS property_definition_id,
+                       concat('Sonumid/', REPLACE(a.folder_path,'\\\\','/'), '/', a.item_id, '/', a.file_orig_guid)    AS local_file
+                FROM x_amphora_sonumid a
+            ) AS foo
+            WHERE ifnull(filename, '') != '' AND filename != '.';
+        """
+
+        entity = db.Entity(user_locale=self.get_user_locale())
+
+        for row in self.db.query(sql):
+            # logging.debug(row)
+            # logging.debug(row.entity_id)
+
+            filename = fileroot + row.local_file
+            try:
+                fh = open(filename)
+            except Exception, e:
+                # logging.debug(e)
+                continue
+
+            logging.debug(filename)
+            logging.debug(modification_date(filename))
+            try:
+                property_id = entity.set_property(entity_id=row.entity_id, relationship_id=None, property_definition_id=row.property_definition_id, value=None, property_id=None, uploaded_file={'filename':row.filename, 'body':fh.read(), 'created':modification_date(filename), })
+            except Exception, e:
+                logging.debug(row)
+                pass
+                # raise e
+
+            fh.close()
+            break
+
 
 class Import(myRequestHandler):
     """
@@ -33,7 +86,7 @@ class Import(myRequestHandler):
 
     def get(self):
         filelisting = "/Users/michelek/amphora-xmls.lst"
-        fl_handler = open(filelisting)
+        fh = open(filelisting)
         all_docs = {}
         cell_names = {}
         cell_names["Dokumendid"] = {}
@@ -48,7 +101,7 @@ class Import(myRequestHandler):
 
         sql_a = []
 
-        db = connection()
+        self.db = connection()
 
         for fname in fl_handler.readlines():
             fname = fname.strip()
@@ -81,7 +134,7 @@ class Import(myRequestHandler):
 
                 sql = u'INSERT INTO x_amphora_%s SET %s;' % (doc_type, ', '.join(sql_a))
                 try:
-                    db.execute(sql)
+                    self.db.execute(sql)
                 except Exception, e:
                     logging.debug(sql)
                     logging.debug(e)
@@ -89,4 +142,5 @@ class Import(myRequestHandler):
 
 handlers = [
     ('/amphora/import', Import),
+    ('/amphora/loadfiles', LoadFiles),
 ]
