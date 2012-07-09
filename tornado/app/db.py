@@ -195,19 +195,17 @@ class Entity():
             )
         else:
             if entity_id:
-                property_id = self.db.execute_lastrowid('INSERT INTO property SET entity_id = %%s, property_definition_id = %%s, %s = %%s, created = %%s, created_by = %%s;' % field,
+                property_id = self.db.execute_lastrowid('INSERT INTO property SET entity_id = %%s, property_definition_id = %%s, %s = %%s, created = %s, created_by = %%s;' % (field, self.created),
                     entity_id,
                     property_definition_id,
                     value,
-                    self.created,
                     self.created_by
                 )
             if relationship_id:
-                property_id = self.db.execute_lastrowid('INSERT INTO property SET relationship_id = %%s, property_definition_id = %%s, %s = %%s, created = %%s, created_by = %%s;' % field,
+                property_id = self.db.execute_lastrowid('INSERT INTO property SET relationship_id = %%s, property_definition_id = %%s, %s = %%s, created = %s, created_by = %%s;' % (field, self.created),
                     relationship_id,
                     property_definition_id,
                     value,
-                    self.created,
                     self.created_by
                 )
 
