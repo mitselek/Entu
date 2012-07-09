@@ -76,7 +76,7 @@ class LoadFiles(myRequestHandler):
                 # raise e
 
             fh.close()
-            break
+            # break
 
 
 class Import(myRequestHandler):
