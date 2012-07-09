@@ -19,6 +19,10 @@
         <link href="{{ static_url('css/screen.css') }}" rel="stylesheet" />
         <link href="{{ static_url('css/print.css') }}" rel="stylesheet" media="print" />
 
+        <style type="text/css">
+        {% block style %}{% end %}
+        </style>
+
         <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -28,18 +32,20 @@
         <script src="{{ static_url('bootstrap/bootstrap.min.js') }}"></script>
         <script src="{{ static_url('javascript/jquery.elastic.source.js') }}"></script>
         <script src="{{ static_url('javascript/date-et-EE.js') }}"></script>
-        <script type="text/javascript">
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-260765-24']);
-            _gaq.push(['_setDomainName', 'entu.ee']);
-            _gaq.push(['_trackPageview']);
+        {% if google_analytics_code %}
+            <script type="text/javascript">
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', '{{ google_analytics_code }}']);
+                _gaq.push(['_setDomainName', 'entu.ee']);
+                _gaq.push(['_trackPageview']);
 
-            (function() {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-        </script>
+                (function() {
+                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
+            </script>
+        {% end %}
     </head>
     <body>
         <div class="navbar navbar-fixed-top">
@@ -61,12 +67,6 @@
         {% end %}
 
         <div id="modal-box" class="modal fade" style="display:none;">
-            <div class="modal-header" style="border:none;">
-                <a class="close" data-dismiss="modal">×</a>
-                <h3 id="modal-box-label">&nbsp;</h3>
-            </div>
-            <div id="modal-box-content" class="modal-body" style="padding-top:0px;">
-            </div>
         </div>
 
         <script>

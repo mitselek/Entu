@@ -100,6 +100,10 @@
     }
 }
 
+.toolbar-item-active {
+    background-color: rgba(0, 0, 0, .05) !important;
+}
+
 .toolbar-item-add {
     margin-left: 9px;
     margin-top: -6px;
@@ -265,6 +269,16 @@ ul.nav li.dropdown:hover ul.dropdown-menu{
 #content {
     position: fixed;
     left: @nav_width + @list_width + 2;
+    right: 0px;
+    top: @toolbar_height;
+    bottom: 0px;
+    padding: 15px;
+    overflow: scroll;
+}
+
+#content-wide {
+    position: fixed;
+    left: @nav_width + 1;
     right: 0px;
     top: @toolbar_height;
     bottom: 0px;

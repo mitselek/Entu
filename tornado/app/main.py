@@ -8,6 +8,10 @@ import tornado.database
 import tornado.options
 from tornado.options import define, options
 
+import logging
+
+
+# Command line options
 define('debug',          help = 'run on debug mode',        type = str, default='False')
 define('port',           help = 'run on the given port',    type = int, default=8000)
 define('mysql_host',     help = 'mysql database host',      type = str)
@@ -15,7 +19,8 @@ define('mysql_database', help = 'mysql database name',      type = str)
 define('mysql_user',     help = 'mysql database user',      type = str)
 define('mysql_password', help = 'mysql database password',  type = str)
 
-#: List of controllers to load.
+
+# List of controllers to load.
 controllers = [
     'auth',
     'entity',
@@ -27,6 +32,15 @@ controllers = [
     'amphora',
 ]
 
+class MainPage(tornado.web.RequestHandler):
+    """
+    Redirects / to site's default path.
+
+    """
+    def get(self):
+        self.require_setting('default_path', 'this application')
+        self.redirect(self.settings['default_path'])
+
 
 class myApplication(tornado.web.Application):
     """
@@ -34,10 +48,13 @@ class myApplication(tornado.web.Application):
 
     """
     def __init__(self):
-        handlers = []
+        handlers = [(r'/', MainPage)]
         for controller in controllers:
             c = __import__ (controller, globals(), locals(), ['*'], -1)
             handlers.extend(c.handlers)
+
+            for h in c.handlers:
+                logging.info('%s.py -> %s' % (controller, h[0]))
 
         settings = {
             'template_path':    path.join(path.dirname(__file__), '..', 'templates'),
