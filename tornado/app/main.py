@@ -30,6 +30,7 @@ controllers = [
     'test',
     'oldauth',
     'amphora',
+    'arxapp',
 ]
 
 class MainPage(tornado.web.RequestHandler):
