@@ -1,14 +1,17 @@
-{% autoescape None %}
 
-<div class="modal-header" style="border:none;">
+<div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
     <h3>{{ entity.get('displayname', '') }}</h3>
 </div>
-<div class="modal-body" style="padding:0px;">
+<div class="modal-body">
+    <div id="javascript-body">
+    </div>
+</div>
+<div class="modal-footer">
+    <a href="#" class="btn" data-dismiss="modal">{{ _('close') }}</a>
 </div>
 
 <script>
-    $(document).ready(function(){
+    document.body.style.cursor = 'default';
 {{ javascript }}
-    });
 </script>
