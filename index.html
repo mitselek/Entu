@@ -13,14 +13,14 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <title>Entu</title>
+    <title>Entu by argoroots</title>
   </head>
 
   <body>
     <header>
       <div class="inner">
         <h1>Entu</h1>
-        <h2>Futuristic Data Management System with emphasis on educational institutions</h2>
+        <h2>Futuristic Data Management System</h2>
         <a href="https://github.com/argoroots/Entu" class="button"><small>View project on</small>GitHub</a>
       </div>
     </header>
@@ -28,37 +28,79 @@
     <div id="content-wrapper">
       <div class="inner clearfix">
         <section id="main-content">
-          <p><img src="https://raw.github.com/argoroots/Entu/master/static/images/screenshot.png" alt="Screenshot" title="Screenshot"></p>
+          <h2>Key features</h2>
+
+<ul>
+<li>It stores data in Entities (objects) and Entities have (text, numeric, date, file, …) properties</li>
+<li>Entities are fully customizable
+
+<ul>
+<li>what properties to show as name, description, etc</li>
+<li>what properties to show in relation table</li>
+<li>what properties to use for search and sort</li>
+<li>allowed child Entities</li>
+<li>what kind of custom actions it supports</li>
+<li>...</li>
+</ul>
+</li>
+<li>Properties are fully customizable
+
+<ul>
+<li>label</li>
+<li>description</li>
+<li>data type</li>
+<li>multiplicity</li>
+<li>visibility in public search</li>
+<li>...</li>
+</ul>
+</li>
+<li>Addition to stored properties, there are calculated properties what calculate/show Entity (or related Entities) properties</li>
+<li>One property can store one or multiple values</li>
+<li>Entities can be related (child, seeder, leecher, …) with each other</li>
+<li>User authentication is delegated to Google, Facebook, Twitter, MS Live or other providers</li>
+<li>Users have diferent rights (viewer, editor, owner) for Entities</li>
+</ul><h2>Screenshot</h2>
+
+<p><img src="https://raw.github.com/argoroots/Entu/master/static/images/screenshot.png" alt="Screenshot" title="Screenshot"></p>
 
 <h2>Dependencies</h2>
 
 <ul>
 <li><a href="http://www.mysql.com/">MySQL</a></li>
 <li>
-<a href="http://www.python.org/">Python</a>, python-mysqldb, python-magic, python-suds and <a href="https://github.com/trentm/python-markdown2">ython-markdown2</a>
-</li>
-<li>
-<a href="http://www.tornadoweb.org">Tornado</a> and <a href="https://github.com/equeny/tornadomail">Tornado mail</a>
-</li>
+<a href="http://www.python.org/">Python</a>
+
+<ul>
+<li><a href="http://www.tornadoweb.org">Tornado</a></li>
+<li><a href="http://mysql-python.sourceforge.net">python-mysqldb</a></li>
+<li><a href="https://github.com/ahupp/python-magic">python-magic</a></li>
+<li><a href="https://fedorahosted.org/suds/">python-suds</a></li>
+<li><a href="https://github.com/trentm/python-markdown2">python-markdown2</a></li>
+<li><a href="https://github.com/equeny/tornadomail">tornadomail</a></li>
+<li><a href="https://github.com/martinblech/xmltodict">xmltodict</a></li>
 <li><a href="http://www.crummy.com/software/BeautifulSoup">Beautiful Soup</a></li>
+</ul>
+</li>
 </ul><h2>Used libraries/add-ons</h2>
 
 <ul>
 <li>
-<a href="http://twitter.github.com/bootstrap/">Bootstrap</a> and <a href="http://fortawesome.github.com/Font-Awesome/">Font Awesome</a>
+<a href="http://twitter.github.com/bootstrap/">Bootstrap</a> + <a href="http://fortawesome.github.com/Font-Awesome/">Font Awesome</a>
 </li>
 <li>
-<a href="http://jquery.com/">jQuery</a>, <a href="http://jqueryui.com/">jQuery UI</a>, <a href="http://unwrongest.com/projects/elastic/">Elastic</a> and <a href="http://www.datejs.com/">Datejs</a>
+<a href="http://jquery.com/">jQuery</a> + <a href="http://jqueryui.com/">jQuery UI</a>
 </li>
+<li><a href="http://unwrongest.com/projects/elastic/">Elastic</a></li>
+<li><a href="http://www.datejs.com/">Datejs</a></li>
 </ul><h2>ToDo</h2>
 
 <ul>
-<li>Sort by Entity.sort</li>
+<li>Calculation (formula) fields</li>
+<li>Sort search results by Entity.sort</li>
 <li>Show Entity.displaycount</li>
-<li>Move definition tables IDs to Keys</li>
 <li>Show all entities in search (not first 303)</li>
-<li>Replace <a href="https://github.com/equeny/tornadomail">Tornado mail</a> with better email library</li>
-<li>Custom Entity add (and other) actions</li>
+<li>Replace <a href="https://github.com/equeny/tornadomail">tornadomail</a> with better email library</li>
+<li>Custom Entity actions</li>
 <li>Favorite entities</li>
 <li>Recently viewed/changed entities</li>
 <li>Separate login page</li>
@@ -81,12 +123,23 @@
             .tar.gz file
           </a>
 
-          <p class="repo-owner"><a href="https://github.com/argoroots/Entu">Entu</a> is maintained by <a href="https://github.com/argoroots">Argo Roots</a> and <a href="https://github.com/mitselek">Mihkel Putrinš</a>.</p>
+          <p class="repo-owner"><a href="https://github.com/argoroots/Entu"></a> is maintained by <a href="https://github.com/argoroots">argoroots</a>.</p>
 
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
         </aside>
       </div>
     </div>
 
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-260765-25");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
 
   </body>
 </html>
