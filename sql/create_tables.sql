@@ -5,25 +5,6 @@ CREATE TABLE `app_settings` (
   PRIMARY KEY (`keyname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_estonian_ci;
 
--- Create syntax for TABLE 'counter'
-CREATE TABLE `counter` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `created` datetime DEFAULT NULL,
-  `created_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `changed` datetime DEFAULT NULL,
-  `changed_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `deleted` datetime DEFAULT NULL,
-  `deleted_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `estonian_label` varchar(200) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `english_label` varchar(200) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `value` int(11) DEFAULT '1',
-  `increment` int(11) NOT NULL DEFAULT '1',
-  `type` enum('childcount','increment') COLLATE utf8_estonian_ci NOT NULL DEFAULT 'increment',
-  `old_id` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `old_id` (`old_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_estonian_ci;
-
 -- Create syntax for TABLE 'user'
 CREATE TABLE `user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -90,6 +71,25 @@ CREATE TABLE `tmp_file` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=100 DEFAULT CHARSET=utf8 COLLATE=utf8_estonian_ci;
 
+-- Create syntax for TABLE 'counter'
+CREATE TABLE `counter` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `created` datetime DEFAULT NULL,
+  `created_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `changed` datetime DEFAULT NULL,
+  `changed_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `deleted` datetime DEFAULT NULL,
+  `deleted_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `estonian_label` varchar(200) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `english_label` varchar(200) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `value` int(11) DEFAULT '1',
+  `increment` int(11) NOT NULL DEFAULT '1',
+  `type` enum('childcount','increment') COLLATE utf8_estonian_ci NOT NULL DEFAULT 'increment',
+  `old_id` varchar(200) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `old_id` (`old_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_estonian_ci;
+
 -- Create syntax for TABLE 'entity_definition'
 CREATE TABLE `entity_definition` (
   `keyname` varchar(25) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
@@ -145,6 +145,25 @@ CREATE TABLE `entity` (
   CONSTRAINT `e_fk_ed` FOREIGN KEY (`entity_definition_keyname`) REFERENCES `entity_definition` (`keyname`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COLLATE=utf8_estonian_ci;
 
+-- Create syntax for TABLE 'relationship_definition'
+CREATE TABLE `relationship_definition` (
+  `keyname` varchar(25) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
+  `created` datetime DEFAULT NULL,
+  `created_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `changed` datetime DEFAULT NULL,
+  `changed_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `deleted` datetime DEFAULT NULL,
+  `deleted_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `estonian_label` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `estonian_label_plural` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `estonian_description` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `english_label` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `english_label_plural` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `english_description` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
+  PRIMARY KEY (`keyname`),
+  UNIQUE KEY `keyname` (`keyname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_estonian_ci;
+
 -- Create syntax for TABLE 'property_definition'
 CREATE TABLE `property_definition` (
   `keyname` varchar(50) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
@@ -157,7 +176,7 @@ CREATE TABLE `property_definition` (
   `deleted` datetime DEFAULT NULL,
   `deleted_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
   `dataproperty` varchar(24) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
-  `datatype` enum('boolean','counter','counter-value','decimal','date','datetime','file','integer','reference','string','text') COLLATE utf8_estonian_ci NOT NULL DEFAULT 'string',
+  `datatype` enum('boolean','counter','counter_value','decimal','date','datetime','file','integer','reference','string','text') COLLATE utf8_estonian_ci NOT NULL DEFAULT 'string',
   `defaultvalue` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
   `estonian_fieldset` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
   `estonian_label` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
@@ -192,69 +211,6 @@ CREATE TABLE `property_definition` (
   CONSTRAINT `pd_fk_ced` FOREIGN KEY (`classifying_entity_definition_keyname`) REFERENCES `entity_definition` (`keyname`) ON UPDATE CASCADE,
   CONSTRAINT `pd_fk_ed` FOREIGN KEY (`entity_definition_keyname`) REFERENCES `entity_definition` (`keyname`) ON UPDATE CASCADE,
   CONSTRAINT `pd_fk_rd` FOREIGN KEY (`relationship_definition_keyname`) REFERENCES `relationship_definition` (`keyname`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_estonian_ci;
-
--- Create syntax for TABLE 'property'
-CREATE TABLE `property` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `property_definition_keyname` varchar(50) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `created_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `changed` datetime DEFAULT NULL,
-  `changed_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `deleted` datetime DEFAULT NULL,
-  `deleted_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `entity_id` int(11) unsigned DEFAULT NULL,
-  `ordinal` int(11) DEFAULT NULL,
-  `language` varchar(10) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `value_string` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `value_text` text COLLATE utf8_estonian_ci,
-  `value_integer` int(11) DEFAULT NULL,
-  `value_decimal` decimal(15,4) DEFAULT NULL,
-  `value_boolean` tinyint(1) unsigned DEFAULT NULL,
-  `value_datetime` datetime DEFAULT NULL,
-  `value_entity` int(11) unsigned DEFAULT NULL,
-  `value_reference` int(11) unsigned DEFAULT NULL,
-  `value_file` int(11) unsigned DEFAULT NULL,
-  `value_counter` int(11) unsigned DEFAULT NULL,
-  `relationship_id` int(11) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `value_string` (`value_string`(255)),
-  KEY `ordinal` (`ordinal`),
-  KEY `language` (`language`),
-  KEY `value_file` (`value_file`),
-  KEY `value_reference` (`value_reference`),
-  KEY `value_counter` (`value_counter`),
-  KEY `entity_id` (`entity_id`),
-  KEY `relationship_id` (`relationship_id`),
-  KEY `value_entity` (`value_entity`),
-  KEY `property_definition_keyname` (`property_definition_keyname`),
-  CONSTRAINT `p_fk_pd` FOREIGN KEY (`property_definition_keyname`) REFERENCES `property_definition` (`keyname`) ON UPDATE CASCADE,
-  CONSTRAINT `property_ibfk_1` FOREIGN KEY (`value_file`) REFERENCES `file` (`id`),
-  CONSTRAINT `property_ibfk_3` FOREIGN KEY (`value_reference`) REFERENCES `entity` (`id`),
-  CONSTRAINT `property_ibfk_4` FOREIGN KEY (`value_counter`) REFERENCES `counter` (`id`),
-  CONSTRAINT `property_ibfk_5` FOREIGN KEY (`entity_id`) REFERENCES `entity` (`id`),
-  CONSTRAINT `property_ibfk_6` FOREIGN KEY (`relationship_id`) REFERENCES `relationship` (`id`),
-  CONSTRAINT `property_ibfk_7` FOREIGN KEY (`value_entity`) REFERENCES `entity` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8 COLLATE=utf8_estonian_ci;
-
--- Create syntax for TABLE 'relationship_definition'
-CREATE TABLE `relationship_definition` (
-  `keyname` varchar(25) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
-  `created` datetime DEFAULT NULL,
-  `created_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `changed` datetime DEFAULT NULL,
-  `changed_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `deleted` datetime DEFAULT NULL,
-  `deleted_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `estonian_label` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `estonian_label_plural` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `estonian_description` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `english_label` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `english_label_plural` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
-  `english_description` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
-  PRIMARY KEY (`keyname`),
-  UNIQUE KEY `keyname` (`keyname`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_estonian_ci;
 
 -- Create syntax for TABLE 'relationship'
@@ -295,4 +251,49 @@ CREATE TABLE `relationship` (
   CONSTRAINT `r_fk_rd` FOREIGN KEY (`relationship_definition_keyname`) REFERENCES `relationship_definition` (`keyname`) ON UPDATE CASCADE,
   CONSTRAINT `r_fk_rpd` FOREIGN KEY (`related_property_definition_keyname`) REFERENCES `property_definition` (`keyname`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=744 DEFAULT CHARSET=utf8 COLLATE=utf8_estonian_ci;
+
+-- Create syntax for TABLE 'property'
+CREATE TABLE `property` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `property_definition_keyname` varchar(50) CHARACTER SET ascii COLLATE ascii_bin DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `created_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `changed` datetime DEFAULT NULL,
+  `changed_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `deleted` datetime DEFAULT NULL,
+  `deleted_by` varchar(100) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `entity_id` int(11) unsigned DEFAULT NULL,
+  `ordinal` int(11) DEFAULT NULL,
+  `language` varchar(10) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `value_string` varchar(500) COLLATE utf8_estonian_ci DEFAULT NULL,
+  `value_text` text COLLATE utf8_estonian_ci,
+  `value_integer` int(11) DEFAULT NULL,
+  `value_decimal` decimal(15,4) DEFAULT NULL,
+  `value_boolean` tinyint(1) unsigned DEFAULT NULL,
+  `value_datetime` datetime DEFAULT NULL,
+  `value_entity` int(11) unsigned DEFAULT NULL,
+  `value_reference` int(11) unsigned DEFAULT NULL,
+  `value_file` int(11) unsigned DEFAULT NULL,
+  `value_counter` int(11) unsigned DEFAULT NULL,
+  `relationship_id` int(11) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `value_string` (`value_string`(255)),
+  KEY `ordinal` (`ordinal`),
+  KEY `language` (`language`),
+  KEY `value_file` (`value_file`),
+  KEY `value_reference` (`value_reference`),
+  KEY `value_counter` (`value_counter`),
+  KEY `entity_id` (`entity_id`),
+  KEY `relationship_id` (`relationship_id`),
+  KEY `value_entity` (`value_entity`),
+  KEY `property_definition_keyname` (`property_definition_keyname`),
+  CONSTRAINT `property_ibfk_1` FOREIGN KEY (`value_file`) REFERENCES `file` (`id`),
+  CONSTRAINT `property_ibfk_3` FOREIGN KEY (`value_reference`) REFERENCES `entity` (`id`),
+  CONSTRAINT `property_ibfk_4` FOREIGN KEY (`value_counter`) REFERENCES `counter` (`id`),
+  CONSTRAINT `property_ibfk_5` FOREIGN KEY (`entity_id`) REFERENCES `entity` (`id`),
+  CONSTRAINT `property_ibfk_6` FOREIGN KEY (`relationship_id`) REFERENCES `relationship` (`id`),
+  CONSTRAINT `property_ibfk_7` FOREIGN KEY (`value_entity`) REFERENCES `entity` (`id`),
+  CONSTRAINT `p_fk_pd` FOREIGN KEY (`property_definition_keyname`) REFERENCES `property_definition` (`keyname`) ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7771 DEFAULT CHARSET=utf8 COLLATE=utf8_estonian_ci;
+
 
