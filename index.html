@@ -1,138 +1,97 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+        <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
 
-    <title>Entu - Futuristic Data Management System</title>
-  </head>
+        <!--[if lt IE 9]>
+            <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
 
-  <body>
-    <header>
-      <div class="inner">
-        <img src="https://raw.github.com/argoroots/Entu/master/static/favicon/apple-touch-icon-114-precomposed.png" alt="Favicon" title="Favicon"  style="float:right; height:114px; padding-right:43px;">
-        <h1>Entu</h1>
-        <h2>Futuristic Data Management System</h2>
-      </div>
-    </header>
+        <title>Entu - Futuristic Data Management System</title>
+    </head>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h2>Key features</h2>
+    <body>
+        <header>
+            <div class="inner">
+                <img src="https://raw.github.com/argoroots/Entu/master/static/favicon/apple-touch-icon-114-precomposed.png" alt="Favicon" title="Favicon"  style="float:right; height:114px; padding-right:43px;">
+                <h1>Entu</h1>
+                <h2>Futuristic Data Management System</h2>
+            </div>
+        </header>
 
-<ul>
-<li>It stores data in Entities (objects) and Entities have (text, numeric, date, file, …) properties</li>
-<li>Entities are fully customizable
+        <div id="content-wrapper">
+            <div class="inner clearfix">
+                <section id="main-content">
+                    <h2>About</h2>
+                    <p>
+                        Entu is object database framework. It stores data in Entities (objects) and Entities have (text, numeric, date, file, …) properties. Entities are fully customizable:
+                        <ul>
+                            <li>what properties to show as name, description, etc</li>
+                            <li>what properties to show in relation table</li>
+                            <li>what properties to use for search and sort</li>
+                            <li>allowed child Entities</li>
+                            <li>what kind of custom actions it supports</li>
+                            <li>what properties to propagate to child entities</li>
+                            <li>etc</li>
+                        </ul>
+                        Entity roperties are also fully customizable (label, description, data type, multiplicity, visibility in public search, etc). In addition to stored properties, there are calculated properties to calculate/show Entity's (or related Entity's) properties. Property can store one or multiple values. Entities can be related with each other by system relations (child, seeder, leecher) or by custom ones.
+                    </p>
+                    <p>
+                     Users can be authentication with Google, Facebook, Twitter or MS Live and they have explicit rights (viewer, editor, owner) for every Entity - there are no roles.
+                    </p>
 
-<ul>
-<li>what properties to show as name, description, etc</li>
-<li>what properties to show in relation table</li>
-<li>what properties to use for search and sort</li>
-<li>allowed child Entities</li>
-<li>what kind of custom actions it supports</li>
-<li>...</li>
-</ul>
-</li>
-<li>Properties are fully customizable
+                    <p>
+                        <img src="https://raw.github.com/argoroots/Entu/master/static/images/screenshot.png" alt="Screenshot" title="Screenshot">
+                    </p>
 
-<ul>
-<li>label</li>
-<li>description</li>
-<li>data type</li>
-<li>multiplicity</li>
-<li>visibility in public search</li>
-<li>...</li>
-</ul>
-</li>
-<li>In addition to stored properties, there are calculated properties to calculate/show Entity's (or related Entity's) properties</li>
-<li>Property can store one or multiple values</li>
-<li>Entities can be related with each other by system relations (child, seeder, leecher) or by custom ones</li>
-<li>User authentication is delegated to Google, Facebook, Twitter, MS Live or other providers</li>
-<li>Users have explicit rights (viewer, editor, owner) for every Entity - there are no roles</li>
-</ul><h2>Screenshot</h2>
 
-<p><img src="https://raw.github.com/argoroots/Entu/master/static/images/screenshot.png" alt="Screenshot" title="Screenshot"></p>
+                    <h2>Hosting I - 9.- €/month</h2>
+                    <ul>
+                        <li>Up to 100 000 entities</li>
+                        <li>Up to 1GB storage</li>
+                        <li>HTTPS</li>
+                        <li>Daily backup to Amazon S3</li>
+                    </ul>
+                    <h2>Hosting II - 39.- €/month</h2>
+                    <ul>
+                        <li>Up to 500 000 entities</li>
+                        <li>Up to 5GB storage</li>
+                        <li>HTTPS</li>
+                        <li>Daily backup to Amazon S3</li>
+                    </ul>
 
-<h2>Dependencies</h2>
+                    <h2>Contact</h2>
+                    info@entu.ee
 
-<ul>
-<li><a href="http://www.mysql.com/">MySQL</a></li>
-<li>
-<a href="http://www.python.org/">Python</a>
+                </section>
 
-<ul>
-<li><a href="http://www.tornadoweb.org">Tornado</a></li>
-<li><a href="http://mysql-python.sourceforge.net">python-mysqldb</a></li>
-<li><a href="https://github.com/ahupp/python-magic">python-magic</a></li>
-<li><a href="https://fedorahosted.org/suds/">python-suds</a></li>
-<li><a href="https://github.com/trentm/python-markdown2">python-markdown2</a></li>
-<li><a href="https://github.com/equeny/tornadomail">tornadomail</a></li>
-<li><a href="https://github.com/martinblech/xmltodict">xmltodict</a></li>
-<li><a href="http://www.crummy.com/software/BeautifulSoup">Beautiful Soup</a></li>
-</ul>
-</li>
-</ul><h2>Used libraries/add-ons</h2>
+                <aside id="sidebar">
+                    <p class="repo-owner" style="text-align:center;">
+                        <a href="https://github.com/argoroots/Entu" class="button" style="text-align:left;"><small>View project on</small>GitHub</a>
+                        Designed and made by<br />
+                        <a href="https://github.com/argoroots">Argo Roots</a> and <a href="https://github.com/mitselek">Mihkel Putrinš</a>
+                    </p>
+                </aside>
+            </div>
+        </div>
 
-<ul>
-<li>
-<a href="http://twitter.github.com/bootstrap/">Bootstrap</a> + <a href="http://fortawesome.github.com/Font-Awesome/">Font Awesome</a>
-</li>
-<li>
-<a href="http://jquery.com/">jQuery</a> + <a href="http://jqueryui.com/">jQuery UI</a>
-</li>
-<li><a href="http://unwrongest.com/projects/elastic/">Elastic</a></li>
-<li><a href="http://www.datejs.com/">Datejs</a></li>
-</ul><h2>ToDo</h2>
-
-<ul>
-<li>Calculation (formula) fields</li>
-<li>Sort search results by Entity.sort</li>
-<li>Show Entity.displaycount</li>
-<li>Show all entities in search (not first 303)</li>
-<li>Replace <a href="https://github.com/equeny/tornadomail">tornadomail</a> with better email library</li>
-<li>Custom Entity actions</li>
-<li>Favorite entities</li>
-<li>Recently viewed/changed entities</li>
-<li>Separate login page</li>
-<li>Invite person to become user</li>
-<li>Customizable table fields by user (visibility, sort)</li>
-<li>Find duplicate Entities and propose merger</li>
-<li>Option to ask permission (send message to owner) to Entity if access denied</li>
-<li>Relation definition based Entity.displaytable</li>
-<li>...</li>
-</ul>
-        </section>
-
-        <aside id="sidebar">
-          <p class="repo-owner" style="text-align:center;">
-            <a href="https://github.com/argoroots/Entu" class="button" style="text-align:left;"><small>View project on</small>GitHub</a>
-            Designed and made by<br />
-            <a href="https://github.com/argoroots">Argo Roots</a> and <a href="https://github.com/mitselek">Mihkel Putrinš</a>
-          </p>
-        </aside>
-      </div>
-    </div>
-
-            <script type="text/javascript">
+        <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
+        </script>
+        <script type="text/javascript">
             try {
-              var pageTracker = _gat._getTracker("UA-260765-25");
-            pageTracker._trackPageview();
+                var pageTracker = _gat._getTracker("UA-260765-25");
+                pageTracker._trackPageview();
             } catch(err) {}
-          </script>
+        </script>
 
-  </body>
+    </body>
 </html>
