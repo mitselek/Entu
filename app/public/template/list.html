@@ -1,0 +1,33 @@
+{% extends '../../main/template/index.html' %}
+
+{% include 'start.html' %}
+
+
+{% block public_content %}
+
+    <form id="simple-search" class="form-horizontal" action="/public-{{ path }}/search" method="POST" style="text-align:center;">
+        <div class="input-append1">
+            <input type="text" name="search" class="span4" placeholder="{{ _('search_placeholder') }}" value="{{ search }}" />
+            <div class="btn-group">
+                <button class="btn" type="submit">{{ _('search_button') }}</button>
+            </div>
+        </div>
+    </form>
+
+    <div style="text-align:center; clear:both;">
+        {{ itemcount }}
+    </div>
+
+    <div class="public_list">
+        {% for i in entities %}
+            <div class="public_list list_item" style="padding:1em; clear:both;">
+                <a href="{{ i['url'] }}">
+                    <img src="/api2/entity-{{ i['id'] }}/picture" style="height:120px; width:120px; float:left; padding:1em;" />
+                    <div style="line-height: 40px;">{{ i['name'] }}</div>
+                </a>
+                <span class="description">{{ i['info'] }}</span>
+            </div>
+        {% end %}
+    </div>
+
+{% end %}

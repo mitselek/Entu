@@ -1,9 +1,6 @@
-# Entu
+# Entu - Futuristic Data Management System
 
-_Futuristic Data Management System with emphasis on educational institutions_
-
-
-## Key features
+![Screenshot](https://raw.github.com/argoroots/Entu/2013-07-01/static/images/screenshot.png "Screenshot")
 
 * It stores data in Entities (objects) and Entities have (text, numeric, date, file, …) properties
 * Entities are fully customizable
@@ -16,7 +13,7 @@ _Futuristic Data Management System with emphasis on educational institutions_
 * Properties are fully customizable
     * label
     * description
-    * data type
+    * data type ('boolean','decimal','date','datetime','file','integer','reference','string','text')
     * multiplicity
     * visibility in public search
     * ...
@@ -27,46 +24,25 @@ _Futuristic Data Management System with emphasis on educational institutions_
 * Users have explicit rights (viewer, editor, owner) for every Entity - there are no roles
 
 
-## Screenshot
+### LICENSE
+The MIT License (MIT)
 
-![Screenshot](https://raw.github.com/argoroots/Entu/master/static/images/screenshot.png "Screenshot")
+Copyright (c) 2013 Argo Roots and Mihkel Putrinš
 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-## Dependencies
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-* [MySQL](http://www.mysql.com/)
-* [Python](http://www.python.org/)
-    * [Tornado](http://www.tornadoweb.org)
-    * [python-mysqldb](http://mysql-python.sourceforge.net)
-    * [python-magic](https://github.com/ahupp/python-magic)
-    * [python-suds](https://fedorahosted.org/suds/)
-    * [python-markdown2](https://github.com/trentm/python-markdown2)
-    * [tornadomail](https://github.com/equeny/tornadomail)
-    * [xmltodict](https://github.com/martinblech/xmltodict)
-    * [Beautiful Soup](http://www.crummy.com/software/BeautifulSoup)
-
-
-## Used libraries/add-ons
-
-* [Bootstrap](http://twitter.github.com/bootstrap/) + [Font Awesome](http://fortawesome.github.com/Font-Awesome/)
-* [jQuery](http://jquery.com/) + [jQuery UI](http://jqueryui.com/)
-* [Elastic](http://unwrongest.com/projects/elastic/)
-* [Datejs](http://www.datejs.com/)
-
-
-## ToDo
-
-* Calculation (formula) fields
-* Show Entity.displaycount
-* Show all entities in search (not first 303)
-* Replace [tornadomail](https://github.com/equeny/tornadomail) with better email library
-* Custom Entity actions
-* Favorite entities
-* Recently viewed/changed entities
-* Separate login page
-* Invite person to become user
-* Customizable table fields by user (visibility, sort)
-* Find duplicate Entities and propose merger
-* Option to ask permission (send message to owner) to Entity if access denied
-* Relation definition based Entity.displaytable
-* ...
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

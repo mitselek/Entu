@@ -1,0 +1,503 @@
+<table id="default" class="edit-form table table-bordered tab-pane{% if actions[0] == 'default' %} active{% end %}">
+    <tbody>
+        {% for p in sorted(entity.get('properties', {}).values(), key=itemgetter('ordinal')) %}
+            {% for idx, v in enumerate(p.get('values')) %}
+                {% if p['visible'] and p['keyname'][:2] != 'x_' %}
+                    <tr{% if p['description'] %} title="{{ p['description'] }}"{% end %}>
+                        {% if idx == 0 %}
+                        <th style="{%if not p['public'] %}color:gray;{% end %}{%if p['mandatory'] %}border-right:1px solid red;{% end %}" rowspan="{{ len(p.get('values')) }}">
+                            {%if p['multiplicity'] == 1 %}{{ p['label'] }}{% else %}{{ p['label_plural'] }}{% end %}
+                        </th>
+                        {% end %}
+                        <td>
+                            {% if p['readonly'] and p['datatype'] != 'counter-value' %}
+                                {% if v['value'] %}
+                                    <span style="padding:8px !important; font-style:italic; color:gray; display:block;">{{ v['value'] }} </span>
+                                {% end %}
+                            {% else %}
+                                {% if p['datatype'] in ['string', 'datetime', 'date', 'integer', 'decimal'] or (p['datatype'] == 'counter-value' and v['value'] and not p['readonly']) %}
+                                    {% if p.get('select', None) %}
+                                        <select class="autosave classifier-select {% if p['can_add_new'] and idx+1 == len(p.get('values')) %}can_add_new{% end %} dtype-{{ p['datatype'] }}" data-property_definition_keyname="{{ p['keyname'] }}" data-id="{{ v['id'] }}" data-value="{{ v['db_value'] }}" style="width:100%;">
+                                            <option value=""></option>
+                                            {% for s in sorted(p.get('select',''), key=itemgetter('label')) %}
+                                            <option value="{{ s['label'] }}" {% if s['label'] == v['value'] %} selected{% end %}>{{ s['label'] }}</option>
+                                            {% end %}
+                                        </select>
+                                    {% else %}
+                                        <input type="text" class="autosave {% if p['can_add_new'] and idx+1 == len(p.get('values')) %}can_add_new{% end %} dtype-{{ p['datatype'] }}" data-property_definition_keyname="{{ p['keyname'] }}" data-id="{{ v['id'] }}" data-value="{{ v['db_value'] }}" value="{{ v['db_value'] }}" />
+                                    {% end %}
+                                {% elif p['datatype'] in ['text', 'html'] %}
+                                    <textarea class="autosave {% if p['can_add_new'] and idx+1 == len(p.get('values')) %}can_add_new{% end %} dtype-{{ p['datatype'] }}" data-property_definition_keyname="{{ p['keyname'] }}" data-id="{{ v['id'] }}" data-value="{{ v['value'] }}">{{ v['value'] }}</textarea>
+                                {% elif p['datatype'] == 'boolean' %}
+                                    <input type="checkbox" class="autosave {% if p['can_add_new'] and idx+1 == len(p.get('values')) %}can_add_new{% end %} dtype-{{ p['datatype'] }}" data-property_definition_keyname="{{ p['keyname'] }}" data-id="{{ v['id'] }}" data-value="{{ v['db_value'] }}" {% if v.get('db_value', 0) == 1 %} checked{% end %} style="margin:8px;" />
+                                {% elif p['datatype'] == 'file' %}
+                                    {% if not v['id'] %}
+                                        <div id="new-filenames-{{ p['keyname'] }}" style="padding:0px;"></div>
+                                        <div class="edit" style="height:23px;">
+                                            <input type="file" title="{{ _('add_files_computer') }}" class="dtype-{{ p['datatype'] }}" data-property_definition_keyname="{{ p['keyname'] }}" multiple>
+                                            <div class="google-open btn btn-small pull-right" data-property_definition_keyname="{{ p['keyname'] }}">{{ _('add_files_google') }}</div>
+                                            <div class="dropbox-open btn btn-small pull-right" data-property_definition_keyname="{{ p['keyname'] }}" style="margin-right:10px;">{{ _('add_files_dropbox') }}</div>
+                                            <div class="url-open btn btn-small pull-right" data-property_definition_keyname="{{ p['keyname'] }}" style="margin-right:10px;">{{ _('add_files_url') }}</div>
+                                        </div>
+                                    {% else %}
+                                        <div class="delete-file-row edit" style="padding:8px;"><a href="/api2/file-{{ v['db_value'] }}">{{ v['value'] }}</a> <a href="javascript:void(0);" data-property_id="{{ v['id'] }}" class="delete-file" style="float:right; display:none;"><i class="fa fa-trash-o" style="color:red;"></i></a></div>
+                                    {% end %}
+                                {% elif p['datatype'] == 'counter-value' %}
+                                    {% if v['value'] %}
+                                        <span style="padding:8px;">{{ v['value'] }}</span>
+                                    {% else %}
+                                        <button data-property_definition_keyname="{{ p['keyname'] }}" data-id="{{ v['id'] }}" class="counter btn btn-warning btn-mini" style="margin:8px;">{{ _('counter_generate_value') }}...</button>
+                                    {% end %}
+                                {% elif p['datatype'] == 'reference' %}
+                                    {% if not v['id'] %}
+                                        <div class="new-references" style="padding:0px;"></div>
+                                        <div><input multiple type="hidden" class="autosave reference" data-property_definition_keyname="{{ p['keyname'] }}" data-reference_definition="{{ p.get('reference_definition') }}" data-multiplicity="{%if p['multiplicity'] %}{{ p['multiplicity'] - len(p.get('values')) + 1 }}{% else %}X{% end %}" style="width:100%;" /></div>
+                                    {% else %}
+                                        <div class="delete-reference-row edit" style="padding:8px;"><a href="#{{ v['db_value'] }}" target="_blank">{{ v['value'] }}</a> <a href="javascript:void(0);" data-property_id="{{ v['id'] }}" class="delete-reference" style="float:right; display:none;"><i class="fa fa-trash-o" style="color:red;"></i></a></div>
+                                    {% end %}
+                                {% elif p['datatype'] == 'dynamic' %}
+                                    <input type="text" class="autosave {% if p['can_add_new'] and idx+1 == len(p.get('values')) %}can_add_new{% end %} dtype-{{ p['datatype'] }}" data-property_definition_keyname="{{ p['keyname'] }}" data-id="{{ v['id'] }}" data-value="{{ v['db_value'] }}" value="{{ v['db_value'] }}" />
+                                {% else %}
+                                    <span style="padding:8px; font-style:italic; color:gray;">{{ ', '.join(['%s' % v['value'] for v in p.get('values') if v['value']]) }}</span>
+                                {% end %}
+                            {% end %}
+                        </td>
+                    </tr>
+                {% end %}
+            {% end %}
+        {% end %}
+    </tbody>
+</table>
+
+<script>
+    $(document).ready(function() {
+
+        $('textarea').elastic();
+
+        $('input[type=file]').bootstrapFileInput();
+
+        $('.dtype-file').change(function() {
+            for (var i=0; i<this.files.length; i++) {
+                {% if s3upload %}
+                    uploadFileS3(this.files[i], $(this));
+                {% else %}
+                    uploadFile(this.files[i], $(this));
+                {% end %}
+            }
+            $(this).val(null);
+        });
+
+        function uploadFileS3(file, div) {
+            $.ajaxSetup({ cache: false });
+            $.post('/api2/file/s3', {
+                entity: $('#database').data('entity_id'),
+                property: div.data('property_definition_keyname'),
+                filename: file.name,
+                filesize: file.size,
+                filetype: file.type
+            }, function(data) {
+                if(data.result) {
+                    $('#database').data('entity_id', data.result.id);
+                    var xhr = new XMLHttpRequest();
+                    var form = new FormData();
+
+                    for(var i in data.result.s3.data) {
+                        form.append(i, data.result.s3.data[i]);
+                    }
+                    form.append('file', file);
+
+                    var status = $('<div class="new-input" style="padding:8px; color:gray;">'+file.name+'<i> - Uploading...</i></div>');
+                    $('#new-filenames-' + div.data('property_definition_keyname')).append(status);
+
+                    xhr.upload.addEventListener('progress', function(ev) {
+                        if(ev.lengthComputable) status.children('i').html(' - ' + Math.round(ev.loaded * 1000 / ev.total) / 10 + '%');
+                    }, false);
+
+                    xhr.onreadystatechange = function(ev) {
+                        if(xhr.readyState == 4 && xhr.status == 201) {
+                            file = {
+                                location: $('Location', xhr.responseXML).text(),
+                                bucket: $('Bucket', xhr.responseXML).text(),
+                                key: $('Key', xhr.responseXML).text(),
+                                etag: $('ETag', xhr.responseXML).text(),
+                                message: $('Message', xhr.responseXML).text(),
+                            }
+                            status.children('i').html('');
+                        }
+                        if(xhr.readyState == 4 && xhr.status != 201) {
+                            status.children('i').html(' - Error!');
+                        }
+                    };
+
+                    xhr.open('POST', data.result.s3.url, true);
+                    xhr.send(form);
+                } else {
+                    console.log(data);
+                }
+            }, 'json');
+        }
+        function uploadFile(file, div) {
+            var xhr = new XMLHttpRequest();
+            var form = new FormData();
+
+            form.append('entity', $('#database').data('entity_id'));
+            form.append('property', div.data('property_definition_keyname'));
+            form.append('filename', file.name);
+            form.append('file', file);
+
+            var status = $('<div class="new-input" style="padding:8px; color:gray;">'+file.name+'<i> - Uploading...</i></div>');
+            $('#new-filenames-' + div.data('property_definition_keyname')).append(status);
+
+            xhr.upload.addEventListener('progress', function(ev) {
+                if(ev.lengthComputable) status.children('i').html(' - ' + Math.round(ev.loaded * 1000 / ev.total) / 10 + '%');
+            }, false);
+
+            xhr.onreadystatechange = function(ev) {
+                if(xhr.readyState == 4 && xhr.status == 200) {
+                    $('#database').data('entity_id', JSON.parse(xhr.response).result.id);
+                    status.children('i').html('');
+                }
+                if(xhr.readyState == 4 && xhr.status != 200) {
+                    console.log(xhr)
+                    status.children('i').html(' - Error!');
+                }
+            };
+
+            xhr.open('POST', '/api2/file', true);
+            xhr.send(form);
+        }
+
+
+        function uploadFromLink(div, links, download) {
+            // console.log(links);
+            for(var i in links) {
+                var filename = (links[i].filename) ? links[i].filename : links[i].url;
+                var status = $('<div class="new-input" style="padding:8px; color:gray;">' + filename + '<i> - Uploading...</i></div>');
+                $('#new-filenames-' + div.data('property_definition_keyname')).append(status);
+                $.post('/api2/file/url', {
+                    entity: $('#database').data('entity_id'),
+                    property: div.data('property_definition_keyname'),
+                    url: links[i].url,
+                    filename: links[i].filename,
+                    download: links[i].download
+                }, function(data) {
+                    $('#database').data('entity_id', data.result.id);
+                    status.children('i').html('');
+                }, 'json');
+            }
+
+        }
+
+        $('.classifier-select').select2({
+            placeholder: ' ',
+            allowClear: true,
+        })
+
+        $('.reference').each( function() {
+            var box = $(this);
+            box.select2({
+                placeholder: ' ',
+                minimumInputLength: 2,
+                multiple: true,
+                allowClear: true,
+                loadMorePadding: 50,
+                ajax: {
+                    url: '/api2/entity',
+                    dataType: 'json',
+                    quietMillis: 1000,
+                    data: function(term, page) {
+                        return {
+                            query: term,
+                            definition: box.data('reference_definition'),
+                            limit: 25,
+                            page: page,
+                        };
+                    },
+                    results: function(data, page) {
+                        var more = (page * 25) < data.count;
+                        return {results: data.result, more: more};
+                    }
+                },
+                formatResult: function(data) {
+                    if(data.id == $('#database').data('entity_id')) return;
+                    if(data.info) {
+                        info = '<span>'+data.info+'</span>';
+                    } else {
+                        info = '';
+                    };
+                    return '<div class="select2-result-item"><img src="/api2/entity-'+data.id+'/picture" />'+data.name+info+'<div>';
+                },
+                formatSelection: function(data) {
+                    return data.name;
+                }
+            });
+        });
+
+        $('.dtype-datetime').change(function() {
+            $(this).val(format_date($(this).val(), 'yyyy-MM-dd HH:mm'));
+        });
+        $('.dtype-date').change(function() {
+            $(this).val(format_date($(this).val(), 'yyyy-MM-dd'));
+        });
+        function format_date(dinput, format) {
+            var result = ''
+            dvalue = Date.parse(dinput);
+            if(dvalue) {
+                result = dvalue.toString(format);
+            }
+            return result;
+        }
+
+        $('.can_add_new').keypress(function() {
+            var inputbox = $(this);
+            var newinput = inputbox.clone(true);
+            newinput.val('');
+            newinput.removeData('id');
+            newinput.removeData('value');
+            inputbox.after(newinput);
+            inputbox.removeClass('can_add_new');
+            inputbox.addClass('new-input');
+            inputbox.unbind('keypress');
+        });
+
+        $('.counter').click(function() {
+            var inputbox = $(this);
+            var inputbox_parent = $(this).parent();
+            inputbox_parent.html('<img src="{{ static_url('images/spinner_white.gif') }}" class="spinner" />');
+            $.post('/entity/save', {
+                counter: 'true',
+                entity_id: $('#database').data('entity_id'),
+                parent_entity_id: '{{ parent_entity_id }}',
+                entity_definition_keyname: '{{ entity_definition_keyname }}',
+                property_definition_keyname: inputbox.data('property'),
+            },
+            function(newvalue) {
+                //alert(JSON.stringify(newvalue));
+                $('#database').data('entity_id', newvalue.entity_id);
+                {% if open_after_add %}$('#modal-box').data('open_entity_id', newvalue.entity_id);{% end %}
+                $('.file_entity_id').val(newvalue.entity_id);
+                inputbox_parent.html('<span style="padding:8px;">'+newvalue.value+'</span>');
+            }, 'json');
+        });
+
+        $('.autosave').change(function(e) {
+            var inputbox = $(this);
+            if (inputbox.attr('type') == 'checkbox') {
+                value = inputbox.is(':checked');
+            } else {
+                value = inputbox.val();
+            }
+            if (inputbox.hasClass('reference')) {
+                $(this).select2('val', '');
+                $(this).parent('div').parent('td').children('.new-references').append('<div class="new-input" style="padding:8px; color:gray;">'+e.added.name+'</div>');
+                value = e.added.id;
+                if($(this).data('multiplicity') != 'X') {
+                    $(this).data('multiplicity', $(this).data('multiplicity') - 1);
+                    if($(this).data('multiplicity') < 1) {
+                        $(this).parent('div').hide();
+                    }
+                }
+            }
+            if (String(value) !== String(inputbox.data('value'))) {
+                $.post('/entity/save', {
+                    entity_id: $('#database').data('entity_id'),
+                    parent_entity_id: '{{ parent_entity_id }}',
+                    entity_definition_keyname: '{{ entity_definition_keyname }}',
+                    property_definition_keyname: inputbox.data('property_definition_keyname'),
+                    value_id: inputbox.data('id'),
+                    value: value
+                },
+                function(newvalue) {
+                    //alert(JSON.stringify(newvalue));
+                    $('#database').data('entity_id', newvalue.entity_id);
+                    {% if open_after_add %}$('#modal-box').data('open_entity_id', newvalue.entity_id);{% end %}
+                    $('.file_entity_id').val(newvalue.entity_id);
+                    if (!inputbox.hasClass('reference')) {
+                        inputbox.data('id', newvalue.value_id);
+                        inputbox.data('value', value)
+                    }
+                }, 'json');
+            }
+        });
+
+        $('.delete-reference').click(function() {
+            var inputbox = $(this);
+            $.post('/entity/save', {
+                entity_id: $('#database').data('entity_id'),
+                parent_entity_id: '{{ parent_entity_id }}',
+                entity_definition_keyname: '{{ entity_definition_keyname }}',
+                property_definition_keyname: inputbox.data('property_definition_keyname'),
+                value_id: inputbox.data('property_id'),
+            },
+            function(newvalue) {
+                inputbox.parent().remove();
+            }, 'json');
+        });
+
+        $('.is_public').change(function() {
+            var inputbox = $(this);
+            value = inputbox.is(':checked');
+            $.post('/entity/save', {
+                entity_id: $('#database').data('entity_id'),
+                parent_entity_id: '{{ parent_entity_id }}',
+                entity_definition_keyname: '{{ entity_definition_keyname }}',
+                is_public: 'true',
+                value: value
+            },
+            function(newvalue) {
+                //alert(JSON.stringify(newvalue));
+                $('#database').data('entity_id', newvalue.entity_id);
+                $('.file_entity_id').val(newvalue.entity_id);
+            }, 'json');
+        });
+
+        $('.delete-file-row').hover(
+            function() {
+                $(this).children('.delete-file').show();
+            },
+            function() {
+                $('.delete-file').hide();
+            }
+        );
+
+        $('.delete-reference-row').hover(
+            function() {
+                $(this).children('.delete-reference').show();
+            },
+            function() {
+                $('.delete-reference').hide();
+            }
+        );
+
+        $('.dropbox-open').click(function() {
+            var input = $(this);
+            Dropbox.choose({
+                linkType: 'direct',
+                multiselect: true,
+                success: function(files) {
+                    var links = [];
+                    for(i in files) {
+                        links.push({
+                            url: files[i].link,
+                            filename: files[i].name,
+                            download: true
+                        });
+                    }
+                    uploadFromLink(input, links, true);
+                }
+            });
+        });
+
+        {% if google_auth_api_id %}
+
+        $('.google-open').click(function() {
+            var input = $(this);
+
+            var DEVELOPER_KEY = '{{ google_auth_api_id }}';
+            var CLIENT_ID = '{{ google_auth_client_id }}';
+            var SCOPE = ['https://www.googleapis.com/auth/drive.readonly', 'https://www.googleapis.com/auth/photos', 'https://www.googleapis.com/auth/photos.upload', 'https://www.googleapis.com/auth/youtube'];
+            var OAUTH_TOKEN;
+
+            gapi.load('auth', {'callback': function() {
+                window.gapi.auth.authorize({
+                    'client_id': CLIENT_ID,
+                    'scope': SCOPE,
+                    'immediate': false
+                }, function(authResult) {
+                    OAUTH_TOKEN = authResult.access_token;
+                    if(OAUTH_TOKEN) {
+                        gapi.load('picker', {'callback': function() {
+                            var picker = new google.picker.PickerBuilder()
+                                .setDeveloperKey(DEVELOPER_KEY)
+                                .setOAuthToken(OAUTH_TOKEN)
+                                .addView(google.picker.ViewId.DOCS)
+                                .addView(google.picker.ViewId.PHOTOS)
+                                .addView(google.picker.ViewId.YOUTUBE)
+                                .addView(google.picker.ViewId.WEBCAM)
+                                .addView(google.picker.ViewId.RECENTLY_PICKED)
+                                .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
+                                .setCallback(function(data) {
+                                    if (data[google.picker.Response.ACTION] == google.picker.Action.PICKED) {
+                                        var files = data[google.picker.Response.DOCUMENTS];
+                                        var links = [];
+                                        for(i in files) {
+                                            links.push({
+                                                url: files[i][google.picker.Document.URL],
+                                                filename: files[i][google.picker.Document.NAME],
+                                                download: false
+                                            });
+                                        }
+                                        uploadFromLink(input, links, false);
+                                    }
+                                })
+                                .build();
+                            picker.setVisible(true);
+                            $('iframe.picker').css('z-index', '7777');
+                            $('div.picker-dialog-bg').css('z-index', '8888');
+                            $('div.picker-dialog').css('z-index', '9999');
+                        }});
+                    }
+                });
+            }});
+
+        });
+
+        {% else %}
+        $('.google-open').hide();
+        {% end %}
+
+
+        $('.url-open').click(function() {
+            var input = $(this);
+            var url = $.trim(window.prompt('{{ _('add_files_url_prompt') }}'));
+            var links = [];
+            if(url) {
+                links.push({
+                    url: url,
+                    filename: null,
+                    download: true
+                });
+                uploadFromLink(input, links, true);
+            }
+        });
+
+        $('.delete-file').click(function() {
+
+            link = $(this);
+            if (confirm("{{ _('confirm_file_delete').replace('\"', '\\\"') }}".replace('%s',link.prev().html()))) {
+                $.post('/entity/delete-file', {
+                    property_id: $(this).data('property_id'),
+                    entity_id: '{{ entity.get('id', '') }}',
+                },
+                function(newvalue) {
+                    link.parent().hide();
+                }, 'json');
+            };
+        });
+
+        $('#delete-entity').click(function() {
+
+            link = $(this);
+            if (confirm('{{ _('confirm_entity_delete').replace('\'', '\\\'') }}'.replace('%s','{{ entity.get('displayname', '').replace('\'', '\\\'') }}'))) {
+                $.post('/entity/delete-entity', {
+                    entity_id: '{{ entity.get('id', '') }}',
+                },
+                function(newvalue) {
+                    window.location.hash = '';
+                    window.location.reload(true);
+                }, 'json');
+            };
+        });
+
+        // var ws_url = 'wss://' + window.location.host +'/ws/scanner_socket?id={{ current_user.get('id') }}';
+        // ws = new WebSocket(ws_url);
+
+        // ws.onmessage = function(evt) {
+        //     $(':focus').val(evt.data);
+        //     $(':focus').trigger('change');
+        // };
+
+        // console.log('WebSocket open to ' + ws_url);
+
+    });
+</script>

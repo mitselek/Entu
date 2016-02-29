@@ -1,0 +1,34 @@
+{% from operator import itemgetter %}
+
+<form id="simple-search" class="form-horizontal" action="/public-{{ path }}/search" method="POST" style="text-align:center;">
+    <div class="input-append1">
+        <input type="text" name="search" class="span4" placeholder="{{ _('search_placeholder') }}" value="" />
+        <div class="btn-group">
+            <button class="btn" type="submit">{{ _('search_button') }}</button>
+        </div>
+    </div>
+</form>
+
+
+
+<script>
+    $(document).ready(function(){
+
+
+        $('.dtype-datetime').change(function() {
+            $(this).val(format_date($(this).val(), 'yyyy-MM-dd HH:mm'));
+        });
+        $('.dtype-date').change(function() {
+            $(this).val(format_date($(this).val(), 'yyyy-MM-dd'));
+        });
+        function format_date(dinput, format) {
+            var result = ''
+            dvalue = Date.parse(dinput);
+            if(dvalue) {
+                result = dvalue.toString(format);
+            }
+            return result;
+        }
+
+    });
+</script>

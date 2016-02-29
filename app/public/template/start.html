@@ -1,0 +1,114 @@
+{% autoescape None %}
+{% extends '../../main/template/index.html' %}
+
+{% block logo_url %}/public{% end %}
+
+{% block style %}
+    .brand {padding-left:0px !important;}
+{% end %}
+
+{% block head %}
+    <!-- Slick carousel -->
+    <link rel="stylesheet" type="text/css" href="{{ static_url('frameworks/slick/slick.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ static_url('frameworks/slick/slick-theme.css') }}">
+    <script type="text/javascript" src="{{ static_url('frameworks/slick/slick.min.js') }}"></script>
+{% end %}
+
+{% block right_toolbar %}
+    <ul class="nav pull-right">
+    {% if len(paths) > 1 %}
+        {% for p, l in paths.iteritems() %}
+            <li class="{% if path == p %} active{% end %}"><a href="/public-{{ p }}{% if search %}/search/{{ search }}{% end %}" style="padding: 15px;">{{ l }}</a></li>
+        {% end %}
+    {% end %}
+        <li><a id="sign_in_link" href="/entity" class="toolbar-item" title="{{ _('log_in') }}" style="border-left:none;"><i class="fa fa-sign-in"></i></a></li>
+    </ul>
+{% end %}
+
+{% block content %}
+    {% if feedback %}
+        <div id="feedback" style="position: fixed;bottom: 0;right: 0;">
+            <label for="feedback" style="display: inline;">{{ _('feedback') }}:</label><a href="mailto:{{ feedback }}" style="padding: 0.3em;">{{ feedback }}</a>
+        </div>
+    {% end %}
+    {% if homepage %}
+        <div id="homepage" style="position: fixed;top: 45px;left: 12px;">
+            <a target="_blank" href="{{ homepage }}"><h3>{{ _('homepage') }}</h3></a>
+        </div>
+    {% end %}
+    <div class="container" style="margin-top:70px;">
+
+        {% block public_content %}
+            <div style="margin:100px auto 50px auto; display:block; text-align: center;">
+                {% if tagcloud %}
+                    <div id="tag_cloud"></div>
+                    <script src="{{ static_url('frameworks/d3js/d3.min.js') }}" charset="utf-8"></script>
+                    <script src="{{ static_url('frameworks/d3js/d3.layout.cloud.js') }}" charset="utf-8"></script>
+                    <style type="text/css">
+                        svg g text {
+                          cursor: pointer;
+                        }
+                        svg g text:hover {
+                          text-decoration: underline;
+                        }
+                    </style>
+                    <script type="text/javascript">
+
+var fill = d3.scale.category20();
+var tags = []
+$.get('/api2/tagcloud?limit=100&definition={{tagcloud}}', function getCloud(data) {
+    tags = data.result.tags
+
+    d3.layout.cloud().size([900, 200])
+        .words(tags.map(function(d) {
+            return {text: d['Tag'].replace(/^[\s\/]+|\s+$/gm,''), size: 10 + d['nLog'] * 30}
+        }))
+        .rotate(function() {
+            return ~~(Math.random() * 11) * 11 - 60.5
+        })
+        .font("Helvetica")
+        .fontSize(function(d) {
+            return d.size
+        })
+        .on("end", draw)
+        .start()
+})
+
+function draw(words) {
+    d3.select("#tag_cloud").append("svg")
+        .attr("width", 900)
+        .attr("height", 200)
+        .append("g")
+        .attr("transform", "translate(450,100)")
+        .selectAll("text")
+        .data(words)
+        .enter().append("text")
+        .style("font-size", function(d) {
+            return d.size + "px"
+        })
+        .style("font-family", "Helvetica")
+        .style("fill", function(d, i) {
+            return fill(i)
+        })
+        .attr("text-anchor", "middle")
+        .attr("transform", function(d) {
+            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")"
+        })
+        .text(function(d) {
+            return d.text
+        })
+        .on("click", function (d, i){
+            window.open(window.location.pathname + "/search/" + d.text, "_self");
+        })
+  }
+                      </script>
+
+                {% else %}
+                    <img src="{{ app_logo }}" alt="logo" style="display:block; margin: 0px auto; max-height:200px;" />
+                {% end %}
+                {% if motd %}<div style="margin: 10px; border:0px; background-color: initial;">{{ motd }}</div>{% end %}
+            </div>
+            {% include 'search.html' %}
+        {% end %}
+    </div>
+{% end %}

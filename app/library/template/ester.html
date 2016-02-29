@@ -1,0 +1,85 @@
+<div class="row" style="text-align:center; margin-bottom:10px; margin-top:20px;">
+    <div class="input-append">
+        <input type="text" id="search-text" name="search" class="span4" placeholder="{{ _('action_add_ester_search_placeholder') }}" value="" data-intro="{{ _('action_add_ester_help_search') }}" data-position="bottom" /><button id="search-button" class="btn">{{ _('search_button') }}</button>
+    </div>
+</div>
+<div class="row" style="text-align:center; margin-bottom:10px; margin-top:20px;">
+    <img src="{{ static_url('images/spinner_white.gif') }}" id="search-spinner" style="padding:40px; display:none; " />
+</div>
+<table id="search-results" class="table" style="margin:0px 0px 50px 0px;">
+</table>
+
+<script>
+
+    function importItem(file_id, entity, definition) {
+        $('#modal-box').modal('hide');
+        $('#modal-box').html('');
+        $.post('/ester/import', {
+            'id': file_id,
+            'entity': entity,
+            'definition': definition,
+        },
+        function(new_id) {
+            window.location = '/entity/{{ entity_definition_keyname }}/'+new_id;
+        });
+    };
+
+    $(document).ready(function(){
+
+        $('#search-text').focus();
+
+        $("#search-text").keyup(function(event) {
+            if(event.keyCode == 13){
+                $("#search-button").click();
+            }
+        });
+
+        $('#search-button').click(function() {
+            if($('#search-text').val()) {
+                $('#search-spinner').show();
+                $('#search-results').hide();
+                $('#search-results').html('');
+                $.get('https://ester.entu.ee/search', {
+                        q: $('#search-text').val(),
+                        f: 'human'
+                    },
+                    function(list) {
+                        for (i in list.result) {
+                            var item = list.result[i];
+                            var tr = '<tr>';
+                            tr += '<td style="width:50px;">';
+                            if(item.isbn) tr += '<img src="https://ester.entu.ee/cover/'+item.isbn+'" style="width:50px; height:50px;" />';
+                            if(item.issn && !item.isbn) tr += '<img src="https://ester.entu.ee/cover/'+item.issn+'" style="width:50px; height:50px;" />';
+                            tr += '</td>';
+                            tr += '<td style="width:99%">';
+                            if(item.title) tr += '<b>'+item.title.join('<br />')+'</b><br />';
+                            if(item.subtitle) tr += '<i>'+item.subtitle.join(', ')+'</i><br />';
+                            if(item.author) tr += '<b>'+item.author.join(' / ')+'</b><br />';
+                            if(item['publishing-date']) tr += item['publishing-date'].join(', ')+'<br />';
+                            if(item.isbn) tr += '<i>'+item.isbn.join(', ')+'</i>';
+                            if(item.issn) tr += ' <i>'+item.issn.join(', ')+'</i>';
+                            tr += '</td>';
+                            tr += '<td id="ester-' + item._id + '"><a href="javascript:importItem(\''+item._id+'\',{{ parent_entity_id }},\'{{ entity_definition_keyname }}\');" class="btn btn-success pull-right" style="margin-right:5px;">{{ _('action_add_ester_add') }}</a></td>';
+                            tr += '</tr>';
+                            $('#search-results').append(tr);
+
+                            if(!item['ester-id']) continue
+                            $.get('/ester/check', {id: item._id, ester_id: item['ester-id'][0]}, function(data) {
+                                $('#ester-' + data.result.id).append('<a href="/entity/'+data.result.definition+'/'+data.result.entity+'" class="btn btn-info pull-right" style="margin-top:5px;margin-right:5px;">{{ _('action_add_ester_open') }}</a>')
+                            }, 'json');
+                        };
+                        $('#search-results').show();
+                        $('#search-spinner').hide();
+                }, 'json').fail(function() {
+                    $('#search-spinner').hide();
+                    $('#search-results').hide();
+                    $('#search-results').html('');
+                });
+            } else {
+                $('#search-text').focus();
+            }
+
+        });
+
+    });
+</script>
